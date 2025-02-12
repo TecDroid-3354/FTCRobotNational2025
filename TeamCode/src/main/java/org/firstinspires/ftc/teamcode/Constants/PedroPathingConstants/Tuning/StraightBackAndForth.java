@@ -25,6 +25,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * @author Harrison Womack - 10158 Scott's Bots
  * @version 1.0, 3/12/2024
  */
+
+// 192.168.43.1:8080/dash
 @Config
 @Autonomous (name = "Straight Back And Forth", group = "Autonomous Pathing Tuning")
 public class StraightBackAndForth extends OpMode {

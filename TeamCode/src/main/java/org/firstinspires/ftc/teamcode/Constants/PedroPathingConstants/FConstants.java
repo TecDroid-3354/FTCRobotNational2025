@@ -16,12 +16,17 @@ public class FConstants { // This is how we change Follower Constants.
         FollowerConstants.mass = 14;
         FollowerConstants.xMovement = 54.5;
         FollowerConstants.yMovement = 20.0;
-        FollowerConstants.forwardZeroPowerAcceleration = -137.2;
-        FollowerConstants.lateralZeroPowerAcceleration = -146.5;
-        //FollowerConstants.zeroPowerAccelerationMultiplier = 0.5;
-        FollowerConstants.drivePIDFCoefficients = new CustomFilteredPIDFCoefficients(0.02, 0.0, 0.0, 0.0, 0.0);
-        FollowerConstants.translationalPIDFCoefficients = new CustomPIDFCoefficients(0.08, 0.0, 0.006, 0.2);
-        FollowerConstants.secondaryTranslationalPIDFCoefficients = new CustomPIDFCoefficients(0.4, 0.0, 0.02, 0.02);
+        FollowerConstants.forwardZeroPowerAcceleration = -98.0;
+        FollowerConstants.lateralZeroPowerAcceleration = -120.5;
+
+        FollowerConstants.drivePIDFCoefficients.setCoefficients(0.02, 0.0, 0.0, 0.0, 0.0);
+        FollowerConstants.secondaryDrivePIDFCoefficients.setCoefficients(0.02, 0.0, 5.0E-6, 0.6, 0.0);
+
+        FollowerConstants.translationalPIDFCoefficients.setCoefficients(0.08, 0.0, 0.006, 0.2);
+        FollowerConstants.secondaryTranslationalPIDFCoefficients.setCoefficients(0.42, 0.0, 0.02, 0.02);
+
+        FollowerConstants.headingPIDFCoefficients.setCoefficients(1.0, 0.0, 0.0, 0.0);
+        FollowerConstants.secondaryHeadingPIDFCoefficients.setCoefficients(5.0, 0.0, 0.08, 0.0);
 
         // PIDs
         FollowerConstants.useSecondaryTranslationalPID = true;
