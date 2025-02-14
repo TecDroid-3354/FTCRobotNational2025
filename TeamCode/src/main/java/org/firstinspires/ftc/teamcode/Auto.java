@@ -9,6 +9,7 @@ import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Constants.Constants;
 import org.firstinspires.ftc.teamcode.Constants.PedroPathingConstants.FConstants;
@@ -20,8 +21,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.Arm.Slider;
 import org.firstinspires.ftc.teamcode.Subsystems.Arm.SliderAngle;
 import org.firstinspires.ftc.teamcode.Subsystems.Arm.Wrist;
 
-@Autonomous(name = "AutoNormal", group = "Examples")
-public class AutoNormal extends CommandOpMode {
+@Autonomous(name = "Auto", group = "Examples")
+public class Auto extends CommandOpMode {
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -37,74 +38,30 @@ public class AutoNormal extends CommandOpMode {
     Wrist wrist;
 
     // Leave pices points
-    private final Pose startPose = new Pose(-36, -60.0, Math.toRadians(90.0));
-    private final Pose goToBasket = new Pose(-55, -55, Math.toRadians(240.0));
-    private final Pose goToPiece1 = new Pose(-38, -40, Math.toRadians(80.0));
-
-    private final Pose goFrontToPiece1 = new Pose(-38, -10, Math.toRadians(80.0));
-    private final Pose goLeftToPiece1 = new Pose(-48, -10, Math.toRadians(80.0));
-    private final Pose leavePiece1 = new Pose(-48, -58, Math.toRadians(80.0));
-
-    private final Pose goFrontToPiece2 = new Pose(-48, -10, Math.toRadians(80.0));
-    private final Pose goLeftToPiece2 = new Pose(-57, -10, Math.toRadians(80.0));
-    private final Pose leavePiece2 = new Pose(-57, -58, Math.toRadians(80.0));
-
-    private final Pose goFrontToPiece3 = new Pose(-57, -10, Math.toRadians(80.0));
-    private final Pose goLeftToPiece3 = new Pose(-61, -10, Math.toRadians(80.0));
-    private final Pose leavePiece3 = new Pose(-61, -58, Math.toRadians(80.0));
-
-    private final Pose goFrontFinal = new Pose(-57, -10, Math.toRadians(80.0));
-
-
+    private final Pose startPose = new Pose(-40, -60.0, Math.toRadians(90.0));
+    private final Pose goToBasket = new Pose(-55, -51, Math.toRadians(50.0));
+    private final Pose goToPiece1 = new Pose(-51, -42, Math.toRadians(90.0));
 
     private Path goToBasketPath;
-    private PathChain leavePiecePC;
+    private Path goToPiece1Path;
 
     public void buildPaths() {
         // Go to basket
         goToBasketPath = new Path(new BezierLine(new Point(startPose), new Point(goToBasket)));
         goToBasketPath.setLinearHeadingInterpolation(startPose.getHeading(), goToBasket.getHeading());
 
-        // leave pieces
-        leavePiecePC = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(goToBasket), new Point(goToPiece1)))
-                .setLinearHeadingInterpolation(goToBasket.getHeading(), goToPiece1.getHeading())
-
-                // leave piece 1
-                .addPath(new BezierLine(new Point(goToPiece1), new Point(goFrontToPiece1)))
-                .setLinearHeadingInterpolation(goToPiece1.getHeading(), goFrontToPiece1.getHeading())
-                .addPath(new BezierLine(new Point(goFrontToPiece1), new Point(goLeftToPiece1)))
-                .setLinearHeadingInterpolation(goFrontToPiece1.getHeading(), goLeftToPiece1.getHeading())
-                .addPath(new BezierLine(new Point(goLeftToPiece1), new Point(leavePiece1)))
-                .setLinearHeadingInterpolation(goLeftToPiece1.getHeading(), leavePiece1.getHeading())
-
-                // leave piece 2
-                .addPath(new BezierLine(new Point(leavePiece1), new Point(goFrontToPiece2)))
-                .setLinearHeadingInterpolation(leavePiece1.getHeading(), goFrontToPiece2.getHeading())
-                .addPath(new BezierLine(new Point(goFrontToPiece2), new Point(goLeftToPiece2)))
-                .setLinearHeadingInterpolation(goFrontToPiece2.getHeading(), goLeftToPiece2.getHeading())
-                .addPath(new BezierLine(new Point(goLeftToPiece2), new Point(leavePiece2)))
-                .setLinearHeadingInterpolation(goLeftToPiece2.getHeading(), leavePiece2.getHeading())
-
-                // leave piece 2
-                .addPath(new BezierLine(new Point(leavePiece2), new Point(goFrontToPiece3)))
-                .setLinearHeadingInterpolation(leavePiece2.getHeading(), goFrontToPiece3.getHeading())
-                .addPath(new BezierLine(new Point(goFrontToPiece3), new Point(goLeftToPiece3)))
-                .setLinearHeadingInterpolation(goFrontToPiece3.getHeading(), goLeftToPiece3.getHeading())
-                .addPath(new BezierLine(new Point(goLeftToPiece3), new Point(leavePiece3)))
-                .setLinearHeadingInterpolation(goLeftToPiece3.getHeading(), leavePiece3.getHeading())
-
-                // Go front final
-                .addPath(new BezierLine(new Point(leavePiece3), new Point(goFrontFinal)))
-                .setLinearHeadingInterpolation(leavePiece3.getHeading(), goFrontFinal.getHeading())
-
-                .build();
+        // Go to piece 1
+        goToPiece1Path = new Path(new BezierLine(new Point(goToBasket), new Point(goToPiece1)));
+        goToPiece1Path.setLinearHeadingInterpolation(goToBasket.getHeading(), goToPiece1.getHeading());
 
     }
 
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
+                arm.goToPosition(Constants.Arm.basketScorePosition);
+                wrist.goToPosition(Constants.Wrist.basketScorePosition);
+
                 follower.followPath(goToBasketPath);
                 setPathState(1);
                 break;
@@ -117,21 +74,20 @@ public class AutoNormal extends CommandOpMode {
                 break;
             case 2:
                 if(!follower.isBusy()) {
-                    if (quesadillaPosition()) {
-                        setPathState(3);
-                    }
+                    setPathState(3);
                 }
                 break;
             case 3:
                 if(!follower.isBusy()) {
-                    follower.followPath(leavePiecePC);
+                    intakePosition();
+                    follower.followPath(goToPiece1Path);
                     setPathState(4);
                 }
                 break;
             case 4:
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if(!follower.isBusy()) {
-                    quesadillaPosition();
+                    intakePosition();
 
                     /* Set the state to a Case we won't use or define, so it just stops running an new paths */
                     setPathState(-1);
@@ -163,7 +119,6 @@ public class AutoNormal extends CommandOpMode {
         gripperAngle = new GripperAngle(hardwareMap, telemetry);
         arm = new Arm(hardwareMap, telemetry);
         wrist = new Wrist(hardwareMap, telemetry);
-
     }
 
     @Override
@@ -188,6 +143,7 @@ public class AutoNormal extends CommandOpMode {
             telemetry.addData("x", follower.getPose().getX());
             telemetry.addData("y", follower.getPose().getY());
             telemetry.addData("heading", follower.getPose().getHeading());
+            telemetry.addData("Slider", slider.getLeftEncoderPosition());
             telemetry.update();
 
             run();
@@ -206,51 +162,87 @@ public class AutoNormal extends CommandOpMode {
         return slider.isAtPosition(Constants.Slider.intakePosition);
     }
 
-    public boolean quesadillaPosition() {
-        arm.goToPosition(Constants.Arm.homePositon);
-        wrist.goToPosition(Constants.Wrist.homePositon);
-        sliderAngle.goToQuesadillaPosition();
+    public boolean intakePosition() {
         slider.goToHomePosition();
-        gripperAngle.goToIntakePosition();
-        gripper.close();
+
+        if (slider.isAtPosition(Constants.Slider.homePosition)) {
+            arm.goToPosition(Constants.Arm.intakePosition);
+            wrist.goToPosition(Constants.Wrist.intakePosition);
+            sliderAngle.goToQuesadillaPosition();
+            slider.goToHomePosition();
+            gripperAngle.goToIntakePosition();
+            gripper.close();
+        }
 
         return sliderAngle.isAtPosition(Constants.SliderAngle.quesadillaPosition);
     }
     public boolean basketScore() {
-        if (!hasScoreAPiece) {
-            if (!slider.isAtPosition(Constants.Slider.basketScorePosition)) {
-                arm.goToPosition(Constants.Arm.basketScorePosition);
-                wrist.goToPosition(Constants.Wrist.basketScorePosition);
+        if (!slider.isAtPosition(Constants.Slider.basketAutoScorePosition)) {
+            arm.goToPosition(Constants.Arm.basketScorePosition);
+            wrist.goToPosition(Constants.Wrist.basketScorePosition);
+            slider.setTargetPositon(Constants.Slider.basketAutoScorePosition);
+            sliderAngle.goToHomePosition();
 
-                if (sliderAngle.isAtPosition(Constants.SliderAngle.homePosition)) {
-                    slider.goToBasketPosition();
-                } else {
-                    sliderAngle.goToHomePosition();
-                }
-            } else {
-                sliderAngle.goToBasketPosition();
-                if (sliderAngle.isAtPosition(Constants.SliderAngle.basketScorePosition)) {
-                    try {Thread.sleep(1200);} catch (InterruptedException e) {}
-                    gripper.open();
-                    hasScoreAPiece = true;
-                }
-
-            }
         } else {
-            if (!sliderAngle.isAtPosition(Constants.SliderAngle.homePosition)) {
-                sliderAngle.goToHomePosition();
-            } else {
-                slider.goToHomePosition();
+            // activate the servos to leave the piece
+            arm.goToPosition(Constants.Arm.basketAutoScorePosition);
+            wrist.goToPosition(Constants.Wrist.basketAutoScorePosition);
 
-                if (slider.isAtPosition(Constants.Slider.homePosition)) {
-                    hasScoreAPiece = false;
-                    return true;
-                }
-            }
+            // stop the slider motors to avoid crashing because the delays
+            slider.stopMotors();
+            try {Thread.sleep(800);} catch (InterruptedException e) {}
+            gripper.open();
+            try {Thread.sleep(400);} catch (InterruptedException e) {}
+            arm.goToPosition(Constants.Arm.basketScorePosition);
+            wrist.goToPosition(Constants.Wrist.basketScorePosition);
+            try {Thread.sleep(500);} catch (InterruptedException e) {}
+
+            return true;
+
         }
 
         return false;
     }
+
+    /*public boolean basketScore() {
+        if (!hasScoreAPiece) {
+            if (!slider.isAtPosition(Constants.Slider.basketAutoScorePosition)) {
+                arm.goToPosition(Constants.Arm.basketScorePosition);
+                wrist.goToPosition(Constants.Wrist.basketScorePosition);
+
+                if (sliderAngle.isAtPosition(Constants.SliderAngle.homePosition)) {
+                    slider.setTargetPositon(Constants.Slider.basketAutoScorePosition);
+                } else {
+                    sliderAngle.goToHomePosition();
+                }
+            } else {
+                // activate the servos to leave the piece
+                arm.goToPosition(Constants.Arm.basketAutoScorePosition);
+                wrist.goToPosition(Constants.Wrist.basketAutoScorePosition);
+
+                // stop the slider motors to avoid crashing because the delays
+                slider.stopMotors();
+                try {Thread.sleep(800);} catch (InterruptedException e) {}
+                gripper.open();
+                try {Thread.sleep(400);} catch (InterruptedException e) {}
+                arm.goToPosition(Constants.Arm.basketScorePosition);
+                wrist.goToPosition(Constants.Wrist.basketScorePosition);
+                try {Thread.sleep(500);} catch (InterruptedException e) {}
+
+                hasScoreAPiece = true;
+
+            }
+        } else {
+            slider.goToHomePosition();
+
+            if (slider.isAtPosition(Constants.Slider.homePosition)) {
+                hasScoreAPiece = false;
+                return true;
+            }
+        }
+
+        return false;
+    }*/
 
     public void grabPiece() {
         // Grab the piece

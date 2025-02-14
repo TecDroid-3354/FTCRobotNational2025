@@ -10,9 +10,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Commands.JoystickCMD;
+import org.firstinspires.ftc.teamcode.Constants.Constants;
+import org.firstinspires.ftc.teamcode.Subsystems.Arm.Arm;
 import org.firstinspires.ftc.teamcode.Subsystems.Arm.Gripper;
 import org.firstinspires.ftc.teamcode.Subsystems.Arm.Slider;
 import org.firstinspires.ftc.teamcode.Subsystems.Arm.SliderAngle;
+import org.firstinspires.ftc.teamcode.Subsystems.Arm.Wrist;
 import org.firstinspires.ftc.teamcode.Subsystems.MecanumDrivetrain;
 
 @TeleOp(name = "MecanumOnly", group = "Op Mode")
@@ -23,6 +26,9 @@ public class MecanumOnly extends CommandOpMode {
     SliderAngle sliderAngle;
     Slider slider;
     Gripper gripper;
+
+    Arm arm;
+    Wrist wrist;
 
     double pos = 0.0;
 
@@ -47,6 +53,8 @@ public class MecanumOnly extends CommandOpMode {
         sliderAngle = new SliderAngle(hardwareMap, telemetry);
         slider = new Slider(hardwareMap, telemetry);
         gripper = new Gripper(hardwareMap, telemetry);
+        arm = new Arm(hardwareMap, telemetry);
+        wrist = new Wrist(hardwareMap, telemetry);
 
         otos.resetTracking();
 
@@ -78,6 +86,10 @@ public class MecanumOnly extends CommandOpMode {
 
         // run the scheduler
         while (!isStopRequested() && opModeIsActive()) {
+            telemetry.addData("Slider", slider.getLeftEncoderPosition());
+            arm.goToPosition(40.0);
+            wrist.goToPosition(100.0);
+
             telemetry.addData("Y", controller.getLeftY());
             telemetry.update();
 

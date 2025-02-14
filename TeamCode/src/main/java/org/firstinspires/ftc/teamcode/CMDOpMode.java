@@ -156,7 +156,7 @@ public class CMDOpMode extends CommandOpMode {
 
         // run the scheduler
         while (!isStopRequested() && opModeIsActive()) {
-            //sliderAngle.encoderData();
+            telemetry.addData("Slider", slider.getLeftEncoderPosition());
             ColorBlobLocatorProcessor.Blob closestDetection = colorDetector.getClosestDetection();
 
             if (closestDetection != null) {

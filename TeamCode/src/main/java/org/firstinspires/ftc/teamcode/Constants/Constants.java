@@ -61,6 +61,8 @@ public class Constants {
         public static double sampleTakePosition = 0.0;
         public static double basketScorePosition = 0.0;
 
+        public static double basketAutoScorePosition = 25.0;
+
     }
 
     public static final class Wrist {
@@ -68,6 +70,7 @@ public class Constants {
         public static double homePositon = 180.0;
         public static double intakePosition = 0.0;
         public static double basketScorePosition = 0.0;
+        public static double basketAutoScorePosition = 100.0;
 
     }
 
@@ -94,6 +97,8 @@ public class Constants {
         public static double specimenScorePosition = 1.2; // 2.0
 
         public static double basketScorePosition = 7.2;
+
+        public static double basketAutoScorePosition = 7.5;
 
         public static double encoderConversionFactor = 1 / 537.7;
         public static boolean rightEncoderReversed = true;

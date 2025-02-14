@@ -36,7 +36,7 @@ public class Slider extends SubsystemBase {
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        positionPIDController = new PIDController(1.0, 0.0, 0.0);
+        positionPIDController = new PIDController(2.0, 0.0, 0.0);
     }
 
     public double getRightEncoderPosition() {
